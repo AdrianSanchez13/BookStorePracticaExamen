@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ContextConfiguration(classes = TestConfig.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookJpaDaoImplTest {
 
     @PersistenceContext
@@ -123,6 +122,29 @@ class BookJpaDaoImplTest {
 
         // Then - Verificamos que ya no existe
         assertFalse(bookJpaDao.findById(insertedBook.getId()).isPresent());
+    }
+
+    @Test
+    void findBook_By_Isbn_Native() {
+        // Given - Primero insertamos el libro
+        BookJpaEntity existingBook = new BookJpaEntity(
+                null,
+                "999999999999",
+                "Native Query Book",
+                new BigDecimal("15.99"),
+                new BigDecimal("5.00")
+        );
+
+        BookJpaEntity insertedBook = bookJpaDao.insert(existingBook);
+        entityManager.flush(); // Asegura que se persiste antes de buscar
+
+        // When - Ahora buscamos por ISBN usando la consulta nativa
+        var result = bookJpaDao.findByIsbn("999999999999");
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(insertedBook.getId(), result.get().getId());
+        assertEquals("Native Query Book", result.get().getTitleEs());
     }
 
 }
