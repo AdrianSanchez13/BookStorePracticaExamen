@@ -45,6 +45,7 @@ public class Book {
     }
 
 
+
     public BigDecimal calculateFinalPrice() {
         if( basePrice == null ) {
             return BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
