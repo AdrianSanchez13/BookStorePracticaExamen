@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 public record BookDto(
-        @NotNull
         Long id,
         @NotNull
         @Size(min = 13, max = 13, message = "El ISBN debe tener exactamente 13 caracteres")

@@ -3,6 +3,7 @@ package org.example.presentation.controller;
 import org.example.domain.model.Page;
 import org.example.domain.service.BookService;
 import org.example.domain.service.dto.BookDto;
+import org.example.domain.validation.DtoValidator;
 import org.example.presentation.controller.mapper.BookMapperPresentation;
 import org.example.presentation.controller.webModel.request.BookInsertRequest;
 import org.example.presentation.controller.webModel.request.BookUpdateRequest;
@@ -52,6 +53,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<BookResponse> createBook(@RequestBody BookInsertRequest bookInsertRequest) {
         BookDto bookDto = BookMapperPresentation.fromBookInsertToBookDto(bookInsertRequest);
+        DtoValidator.validate(bookDto);
         BookDto createdBook = bookService.create(bookDto);
         BookResponse bookResponse = BookMapperPresentation.fromBookDtoToBookResponse(createdBook);
         return new ResponseEntity<>(bookResponse, HttpStatus.CREATED);
@@ -61,6 +63,8 @@ public class BookController {
 
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @RequestBody BookUpdateRequest bookUpdateRequest) {
         BookDto bookDto = BookMapperPresentation.fromBookUpdateToBookDto(bookUpdateRequest);
+        // Cuidado que tenemos el id @notnull en bookdto
+        DtoValidator.validate(bookDto);
         BookDto updatedBook = bookService.update(bookDto);
         BookResponse bookResponse = BookMapperPresentation.fromBookDtoToBookResponse(updatedBook);
         return new ResponseEntity<>(bookResponse, HttpStatus.OK);
