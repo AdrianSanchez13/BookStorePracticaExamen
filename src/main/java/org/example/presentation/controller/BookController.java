@@ -24,8 +24,8 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<Page<BookResponse>> findAllBooks(
-            @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "10") int size) {
+            @RequestParam (required = false, defaultValue = "1") int page,
+            @RequestParam (required = false, defaultValue = "10") int size) {
 
         Page<BookDto> bookDtoPage = bookService.getAll(page, size);
 

@@ -4,6 +4,7 @@ import org.example.domain.model.Page;
 import org.example.domain.repository.BookRepository;
 import org.example.domain.repository.entity.BookEntity;
 import org.example.persistence.dao.jpa.BookJpaDao;
+import org.example.persistence.dao.jpa.entity.BookJpaEntity;
 import org.example.persistence.repository.mapper.BookMapperPersistence;
 
 
@@ -32,13 +33,14 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public BookEntity save(BookEntity bookEntity) {
-        return BookMapperPersistence.getInstance()
-                .fromBookJpaEntityToBookEntity(
-                        bookJpaDao.insert(
-                                BookMapperPersistence.getInstance()
-                                        .fromBookEntityToBookJpaEntity(bookEntity)
-                        )
-                );
+        var bookJpaEntity = BookMapperPersistence.getInstance().fromBookEntityToBookJpaEntity(bookEntity);
+        BookJpaEntity savedBookJpaEntity;
+        if (bookJpaEntity.getId() == null) {
+            savedBookJpaEntity = bookJpaDao.insert(bookJpaEntity);
+        } else {
+            savedBookJpaEntity = bookJpaDao.update(bookJpaEntity);
+        }
+        return BookMapperPersistence.getInstance().fromBookJpaEntityToBookEntity(savedBookJpaEntity);
     }
 
     @Override

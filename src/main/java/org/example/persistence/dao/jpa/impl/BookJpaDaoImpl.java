@@ -2,6 +2,7 @@ package org.example.persistence.dao.jpa.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.example.domain.exception.ResourceNotFoundException;
 import org.example.persistence.dao.jpa.BookJpaDao;
 import org.example.persistence.dao.jpa.entity.BookJpaEntity;
@@ -9,6 +10,7 @@ import org.example.persistence.dao.jpa.entity.BookJpaEntity;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public class BookJpaDaoImpl implements BookJpaDao {
     @PersistenceContext
     private EntityManager entityManager;
@@ -38,7 +40,7 @@ public class BookJpaDaoImpl implements BookJpaDao {
     public List findAll(int page, int size) {
         String jpql = "SELECT b FROM BookJpaEntity b";
         return entityManager.createQuery(jpql, BookJpaEntity.class)
-                .setFirstResult(page * size)
+                .setFirstResult((page -1) * size)
                 .setMaxResults(size)
                 .getResultList();
     }
