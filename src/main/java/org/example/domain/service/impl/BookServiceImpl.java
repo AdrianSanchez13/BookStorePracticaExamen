@@ -4,13 +4,13 @@ import org.example.domain.mapper.BookMapper;
 import org.example.domain.model.Page;
 import org.example.domain.repository.BookRepository;
 import org.example.domain.repository.entity.BookEntity;
-import org.example.domain.service.Bookservice;
+import org.example.domain.service.BookService;
 import org.example.domain.service.dto.BookDto;
 
 import java.util.List;
 import java.util.Optional;
 
-public class BookServiceImpl implements Bookservice {
+public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
 

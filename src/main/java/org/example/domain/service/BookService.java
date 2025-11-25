@@ -5,7 +5,7 @@ import org.example.domain.service.dto.BookDto;
 
 import java.util.Optional;
 
-public interface Bookservice {
+public interface BookService {
     Page<BookDto> getAll(int page, int size);
     BookDto getByIsbn(String isbn);
     Optional<BookDto> findByIsbn(String isbn);

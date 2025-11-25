@@ -5,7 +5,6 @@ import org.example.domain.repository.BookRepository;
 import org.example.domain.repository.entity.BookEntity;
 import org.example.persistence.dao.jpa.BookJpaDao;
 import org.example.persistence.repository.mapper.BookMapperPersistence;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 import java.util.Optional;
@@ -33,7 +32,13 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public BookEntity save(BookEntity bookEntity) {
-        return null;
+        return BookMapperPersistence.getInstance()
+                .fromBookJpaEntityToBookEntity(
+                        bookJpaDao.insert(
+                                BookMapperPersistence.getInstance()
+                                        .fromBookEntityToBookJpaEntity(bookEntity)
+                        )
+                );
     }
 
     @Override
@@ -44,6 +49,11 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Page<BookEntity> findAll(int page, int size) {
-        return null;
+        var bookJpaEntities = bookJpaDao.findAll(page, size);
+        var bookEntities = bookJpaEntities.stream()
+                .map(BookMapperPersistence.getInstance()::fromBookJpaEntityToBookEntity)
+                .toList();
+        var totalElements = bookJpaDao.count();
+        return new Page<>(bookEntities, page, size, totalElements);
     }
 }
